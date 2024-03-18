@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta viewport="width=device-width, initial-scale=1.0" />
+    <title>Dev Hunt Search Interface</title>
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <link
+      href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../static/css/style.css" />
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+
+    <!-- Bootstrap JS (optional, for certain components) -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  </head>
+  <body>
+    <div class="search-container">
+      <div class="search-heading" style="font-size: 4em;"><h1>Dev Hunt</h1></div>
+
+      <form class="search-form" id="searchForm" method="post">
+        <div class="search-field">
+          <input
+            type="text"
+            placeholder="Search..."
+            class="search-input"
+            id="searchInput"
+            name="query-input"
+            required
+          />
+          <div class="search-button" id="searchButton">
+            <i class="fa fa-search"></i>
+          </div>
+        </div>
+        <div class="search-options">
+          <label class="search-option"
+            ><input type="radio" name="searchOption" value="pylucene" checked />
+            Pylucene</label
+          >
+          <label class="search-option"
+            ><input type="radio" name="searchOption" value="bert" /> Bert</label
+          >
+        </div>
+        <div class="custom-select">
+          <button
+            class="select-button"
+            role="combobox"
+            aria-labelledby="select button"
+            aria-haspopup="listbox"
+            aria-expanded="false"
+            aria-controls="select-dropdown"
+            type="button"
+          >
+            <span class="selected-value">Select the Programming Language</span>
+            <span class="arrow"></span>
+          </button>
+          <ul class="select-dropdown" role="listbox" id="select-dropdown">
+            <li role="option">
+              <input
+                type="radio"
+                id="python"
+                value="python"
+                name="programming-language"
+              />
+              <label for="python"><i class="bx"></i>Python</label>
+            </li>
+            <li role="option">
+              <input
+                type="radio"
+                id="javascript"
+                value="javascript"
+                name="programming-language"
+              />
+              <label for="javascript"><i class="bx"></i>Javascript</label>
+            </li>
+            <li role="option">
+              <input
+                type="radio"
+                id="cpp"
+                value="cpp"
+                name="programming-language"
+              />
+              <label for="cpp"><i class="bx"></i>C/C++</label>
+            </li>
+            <li role="option">
+              <input
+                type="radio"
+                id="java"
+                value="java"
+                name="programming-language"
+              />
+              <label for="java"><i class="bx"></i>Java</label>
+            </li>
+            <li role="option">
+              <input
+                type="radio"
+                id="react"
+                value="react"
+                name="programming-language"
+              />
+              <label for="react"><i class="bx"></i>React</label>
+            </li>
+            <li role="option">
+              <input
+                type="radio"
+                id="machine_learning"
+                value="machine_learning"
+                name="programming-language"
+              />
+              <label for="machine_learning"
+                ><i class="bx"></i>Machine Learning</label
+              >
+            </li>
+          </ul>
+        </div>
+
+        <input type="submit" class="submit-button" id="search" />
+      </form>
+    </div>
+    {% if results or other_results%}
+      <div class="selected-options-contioner">
+        <h3>Results for</h3>
+        <h3>"{{query}}" in {{programming_language}} using {{indexing_type}}</h3>
+      </div>
+    {% endif %}
+    {% if code_snippet %}
+    <div class="selected-options-contioner">
+      <h3>Code Snippet/ Explanation</h3>
+    </div>
+
+    <div class="code-snippet-container">
+      {{code_snippet}}
+    </div>
+    {% endif %}
+
+    {% if explanation %}
+    <div class="selected-options-contioner">
+      <h3>Explanation</h3>
+    </div>
+
+    <div class="code-snippet-container">
+      {{explanation}}
+    </div>
+    {% endif %}
+    <div class="all-results-container" style = "margin-top:20px">
+      {% if results %}
+      <h2 style="width: 83%;">Results</h2>
+      <div class="results-container">
+        {% for result in results %}
+        <div class="card result-container">
+          <div class="card-body">
+            <div class="card-first-line">
+              <div class="score">{{result['score']}}</div>
+              <div class="card-text">
+                <h6 class="card-title">{{result["title"]}}</h6>
+                <h6 class="card-subtitle mb-2"><a href="{{result['url']}}" class="card-link" target="_blank">{{result['url']}}</a></h6>
+              </div>
+            </div>
+            <div class="content">{{result['content']}}</div>          
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %} 
+      {% if other_results %}
+      <h2 style="width: 83%;">Other Results</h2>
+      <div class="results-container">
+        {% for result in other_results %}
+        <div class="card result-container">
+          <div class="card-body">
+            <div class="card-first-line">
+              <div class="score">{{result['score']}}</div>
+              <div class="card-text">
+                <h6 class="card-title">{{result["title"]}}</h6>
+                <h6 class="card-subtitle mb-2"><a href="{{result['url']}}" class="card-link" target="_blank">{{result['url']}}</a></h6>
+              </div>
+            </div>
+            <div class="content">{{result['content']}}</div>     
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+      document
+        .getElementById("searchButton")
+        .addEventListener("click", function () {
+          var searchInput = document.getElementById("searchInput");
+          searchInput.classList.toggle("active");
+          searchInput.focus();
+        });
+
+      // document
+      //   .getElementById("searchForm")
+      //   .addEventListener("submit", function (event) {
+      //     event.preventDefault();
+      //     // Implement form submission logic here
+      //   });
+
+      const customSelect = document.querySelector(".custom-select");
+      const selectBtn = document.querySelector(".select-button");
+
+      const selectedValue = document.querySelector(".selected-value");
+      const optionsList = document.querySelectorAll(".select-dropdown li");
+
+      // add click event to select button
+      selectBtn.addEventListener("click", () => {
+        // add/remove active class on the container element
+        customSelect.classList.toggle("active");
+        // update the aria-expanded attribute based on the current state
+        selectBtn.setAttribute(
+          "aria-expanded",
+          selectBtn.getAttribute("aria-expanded") === "true" ? "false" : "true"
+        );
+      });
+
+      optionsList.forEach((option) => {
+        function handler(e) {
+          // Click Events
+          if (e.type === "click" && e.clientX !== 0 && e.clientY !== 0) {
+            selectedValue.textContent = this.children[1].textContent;
+            customSelect.classList.remove("active");
+          }
+          // Key Events
+          if (e.key === "Enter") {
+            selectedValue.textContent = this.textContent;
+            customSelect.classList.remove("active");
+          }
+        }
+
+        option.addEventListener("keyup", handler);
+        option.addEventListener("click", handler);
+      });
+      document
+        .getElementById("searchForm")
+        .addEventListener("submit", function (event) {
+          var selectedLanguage = document.querySelector(
+            'input[name="programming-language"]:checked'
+          );
+          if (!selectedLanguage) {
+            alert("Please select a programming language.");
+            event.preventDefault(); // Prevent form submission
+          }
+        });
+        var coll = document.getElementsByClassName("collapsible");
+        var i;
+
+        for (i = 0; i < coll.length; i++) {
+          coll[i].addEventListener("click", function() {
+            this.classList.toggle("active");
+            var content = this.nextElementSibling;
+            if (content.style.display === "block") {
+              content.style.display = "none";
+            } else {
+              content.style.display = "block";
+            }
+          });
+        }
+    </script>
+  </body>
+</html>
+
